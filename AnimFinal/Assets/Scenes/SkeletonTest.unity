@@ -968,6 +968,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6780290450794078720, guid: 5e6a3b6c954651240abdae424f995478, type: 3}
+      propertyPath: iterations
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8712382529130221608, guid: 5e6a3b6c954651240abdae424f995478, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0

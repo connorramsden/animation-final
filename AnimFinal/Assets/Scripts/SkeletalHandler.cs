@@ -235,7 +235,7 @@ public class SkeletalHandler : MonoBehaviour
 
 				OVRSkeletonNodes[jointList[(jointList.Count - 1)]].transform.position = targetPos;    //move the endEffector to the target
 
-				//Debug.Log("[OUR CODE] Check One");
+				
 
 				//go through the chain from end to beginning
 				for (int j = (jointList.Count - 1); j > 0; --j)     //has to be this weird way for parents
@@ -243,9 +243,17 @@ public class SkeletalHandler : MonoBehaviour
 					//GameObject currJoint = jointList[j];
 					//GameObject parentJoint = jointList[j - 1];
 					//Debug.Log("[OUR CODE] Current Joint: " + OVRSkeletonNodes[jointList[j]].name + "    Parent Joint: " + OVRSkeletonNodes[jointList[j - 1]].name);
+					
 
 					Vector3 dir = (OVRSkeletonNodes[jointList[j - 1]].transform.position - OVRSkeletonNodes[jointList[j]].transform.position).normalized;    //set the direction vector to place the parent joint inline
-					OVRSkeletonNodes[jointList[j - 1]].transform.position = OVRSkeletonNodes[jointList[j]].transform.position - (distances[j - 1] * dir); //set position of parent joint in the direction of the joint movement by the distance between
+					float dist = 1;
+					if(j != 0)
+                    {
+						dist = distances[j - 1];
+						//Debug.Log("[OUR CODE] Iterations on distance: " + (j - 1));
+					}
+
+					OVRSkeletonNodes[jointList[j - 1]].transform.position = OVRSkeletonNodes[jointList[j]].transform.position + (dist * dir); //set position of parent joint in the direction of the joint movement by the distance between
 				}
 
 				OVRSkeletonNodes[jointList[0]].transform.position = firstBasePos;      //move the beginning joint back to its root pos
@@ -256,19 +264,28 @@ public class SkeletalHandler : MonoBehaviour
 					//GameObject currJoint = jointList[j];
 					//GameObject childJoint = jointList[j + 1];
 					//Debug.Log("[OUR CODE] Current Joint: " + OVRSkeletonNodes[jointList[j]].name + "    Child Joint: " + OVRSkeletonNodes[jointList[j + 1]].name);
-
+					
+					
 					Vector3 dir = (OVRSkeletonNodes[jointList[j + 1]].transform.position - OVRSkeletonNodes[jointList[j]].transform.position).normalized;
-					OVRSkeletonNodes[jointList[j + 1]].transform.position = OVRSkeletonNodes[jointList[j]].transform.position + (distances[j] * dir);
+					float dist = 1;
+					if(j + 1 != jointList.Count)
+                    {
+						dist = distances[j];
+						//Debug.Log("[OUR CODE] Iterations on distance: " + j);
+					}
+
+					OVRSkeletonNodes[jointList[j + 1]].transform.position = OVRSkeletonNodes[jointList[j]].transform.position + (dist * dir);
 				}
 
 				//Solver for effector
 				//then effector pos minus the pos of its child
 				//Vector3 offset = OVRSkeletonNodes[jointList[(jointList.Count - 1)]].transform.position - OVRSkeletonNodes[jointList[(jointList.Count - 2)]].transform.position;
-				Vector3 offset = OVRSkeletonNodes[jointList[(jointList.Count - 1)]].transform.position - targetPos;
-				if(offset.magnitude > effectorTolerance)
-                {
-					break;
-                }
+				//Vector3 offset = OVRSkeletonNodes[jointList[(jointList.Count - 1)]].transform.position - targetPos;
+				//if(offset.magnitude < effectorTolerance)
+    //            {
+				//	break;
+    //            }
+				
 				
 			}
 		}
