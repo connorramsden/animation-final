@@ -76,11 +76,11 @@ public class SkeletalHandler : MonoBehaviour
 		solveHipToGround();
 		updateEffectorDistances();
 
-		//SolveInverseKinematicsIter(LeftArm, LeftArmBoneLengths, LeftOculus.position, LeftArmEffectorDistance, LeftArmChainLength, iterations);
-		//SolveInverseKinematicsIter(RightArm, RightArmBoneLengths, RightOculus.position, RightArmEffectorDistance, RightArmChainLength, iterations);
+		SolveInverseKinematicsIter(LeftArm, LeftArmBoneLengths, LeftOculus.position, LeftArmEffectorDistance, LeftArmChainLength, iterations);
+		SolveInverseKinematicsIter(RightArm, RightArmBoneLengths, RightOculus.position, RightArmEffectorDistance, RightArmChainLength, iterations);
 		SolveInverseKinematicsIter(LeftLeg, LeftLegBoneLengths, LeftLegTarget(), LeftLegEffectorDistance, LeftLegChainLength, iterations);
 		SolveInverseKinematicsIter(RightLeg, RightLegBoneLengths, RightLegTarget(), RightLegEffectorDistance, RightLegChainLength, iterations);
-		//SolveInverseKinematicsIter(Look, LookBoneLengths, HeadsetOculus.position, LookEffectorDistance, LookChainLength, iterations);			
+		SolveInverseKinematicsIter(Look, LookBoneLengths, HeadsetOculus.position, LookEffectorDistance, LookChainLength, iterations);			
 		//SolveInverseKinematicsIter(Spine, SpineBoneLengths, (HeadsetOculus.position), SpineEffectorDistance, SpineChainLength, iterations);	//find new target for this
 		
 		//updateFullSkeletonPostion();
