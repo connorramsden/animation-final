@@ -1,91 +1,18 @@
-﻿using System.Collections;
+﻿using DefaultNamespace;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class ExportHTR : MonoBehaviour
 {
-    
-    /* 
-    # Maya handles Euler Angle Rotation Order as an enum, so this resolves that into string
-    def handleRotOrder(num):
-    	switcher = {
-    		0: 'XYZ',
-    		1: 'YZX',
-    		2: 'ZXY',
-    		3: 'XZY',
-    		4: 'YXZ',
-    		5: 'ZYX'
-    	}
-    
-    	return switcher.get(num)
-    
-    # Selects and compiles information on the skeletal hierarchy
-    def selectSkeleton():
-    	print 'Beginning Skeleton Information Gathering\n'
-    	# Gather all nodes from the Maya skeleton
-    	maya_skel = cmds.ls('Character1_*')  # this could be more modular
-    	# Create our output list
-    	skeleton = []
-    	# get rotation order from the hips (should be the same across all nodes,
-    	#                                       but not best way to handle this)
-    	rot_order = cmds.getAttr('Character1_Hips.rotateOrder')
-    	# Iterate over each node to pack data
-    	for elem in maya_skel:
-    		# Packed data
-    		if elem == 'Character1_ReferenceShape':  # ensure we do not pack blank data
-    			continue
-    		node = [elem]
-    		# Collect each node's attribute names (no numerical info)
-    		elem_attr = cmds.listAttr(elem, keyable=True)
-    		# node.append(elem_attr)
-    		# now collect numerical info per attribute
-    		if elem_attr is not None:  # ensures that we will not have null type errors
-    			for attr in elem_attr:
-    				node_attr = cmds.getAttr(elem + '.' + attr)  # gets individual element data
-    				if type(node_attr) is float:
-    					node_attr = '%.6f' % node_attr
-    				node.append(node_attr)
-    		skeleton.append(node)
-    	skeleton.append(cmds.getAttr('Character1_Hips.scaleX'))
-    	skeleton.append(handleRotOrder(rot_order))  # rotation euler order is last thing packed
-    	print '\nEnding Skeleton Information Gathering'
-    	return skeleton
-    
-    # Organizes and packs Animation Header Data
-    def collectAnimInfo(skeleton_data):
-    	print 'Beginning Animation Information Gathering\n'
-    	num_segments = len(skeleton_data)  # NumSegments
-    	num_frames = 2  # NumFrames || Need to find out how to retrieve this from Maya
-    	fps = int(mel.eval('float $fps = `currentTimeUnitToFPS`'))  # Calculate DataFrameRate
-    	data = [num_segments, num_frames, fps]  # pack the data for return
-    	print '\nEnding Animation Information Gathering'
-    	return data
-    
-    # Returns a string for Segment Names & Hierarchy
-    def formatSkeletonHierarchy(skeleton_data):
-    	print(skeleton_data)
-    	return ""
-    
+	/*    
     # Writes out data to HTR file format
     def exportInfo(anim_data, skeleton_data):
     	print 'Beginning HTR exportation.\n'
     	# create a new file with output_file name
     	f = open(output_file, 'w')
-    
-    	''' Write disclaimers & user information'''
-    	f.write('# Comment line ignore any data following # character\r\n')
-    	f.write('# Hierarchical Translation and Rotation (.htr) file\r\n')
-    
-    	''' write header '''
-    	f.write('[Header] \t\t# Header keywords are followed by a single value\r\n')
-    	f.write('# KeyWord<space>Value<CR>\n')
-    	f.write('FileType htr \r\nDataType HTRS \r\nFileVersion 1\r\n')
-    	f.write('NumSegments %i \r\nNumFrames %i \r\nDataFrameRate %i\r\n' % (anim_data[0], anim_data[1], anim_data[2]))
-    	f.write('EulerRotationOrder %s \r\nCalibrationUnits mm\r\n' % (skeleton_data[-1]))
-    	# this information should be retrieved from the data, but I need HIK/MEL documentation (which doesn't exist)
-    	f.write('GlobalAxisOfGravity Y \r\nRotationUnits Degrees \r\nBoneLengthAxis Y\r\n')
-    	f.write('ScaleFactor %f\r\n' % skeleton_data[-2])
-    
+            
     	''' write segment names and hierarchy info '''
     	f.write('[SegmentNames&Hierarchy] \r\n#CHILD\tPARENT\r\n')
     	segment_names_hierarchy = formatSkeletonHierarchy(skeleton_data)
@@ -113,46 +40,67 @@ public class ExportHTR : MonoBehaviour
     
     	f.close()
     	print '\nEnding HTR exportation.'
-    
-    
-    # A class with a constructor and doIt(MPX Command thing) for MayaPy
-    class ExportHtrClass(OpenMayaMPx.MPxCommand):
-    
-    	def __init__(self):
-    		''' Constructor. '''
-    		OpenMayaMPx.MPxCommand.__init__(self)
-    
-    	def doIt(self, args):
-    		''' Command Execution (main()) '''
-    		skel_data = selectSkeleton()
-    		anim_data = collectAnimInfo(skel_data)
-    		exportInfo(anim_data, skel_data)
-    
-    
-    # Allows us to initialize the command in MayaPy
-    def cmdCreator():
-    	''' Create an instance of our command. '''
-    	return OpenMayaMPx.asMPxPtr(ExportHtrClass())
-    
-    
-    # Initializes the Plugin in Maya
-    def initializePlugin(mobject):
-    	''' Initialize the plug-in when Maya loads it. '''
-    	mplugin = OpenMayaMPx.MFnPlugin(mobject)
-    	try:
-    		mplugin.registerCommand(commandName, cmdCreator)
-    	except:
-    		sys.stderr.write('Failed to register command: ' + commandName)
-    
-    
-    # Uninitializes the plugin in Maya
-    def uninitializePlugin(mobject):
-    	''' Uninitialize the plug-in when Maya un-loads it. '''
-    	mplugin = OpenMayaMPx.MFnPlugin(mobject)
-    	try:
-    		mplugin.deregisterCommand(commandName)
-    	except:
-    		sys.stderr.write('Failed to unregister command: ' + commandName)
+        */
 
-    */
+	const string outputPath = @"E:\projects\animation-final\mocap.htr";
+
+	public bool ExportInfo(List<FrameData> posDat, List<FrameData> rotDat)
+	{
+		if (!File.Exists(outputPath))
+		{
+			using (StreamWriter sw = File.CreateText(outputPath))
+			{
+				// Write disclaimers & user info
+				sw.Write("# Comment lines ignore any data following # character\r\n");
+				sw.Write("# Hierarchical Translation and Rotation (.htr) file\r\n");
+
+				// Write header
+				sw.Write("[Header]\t\t# Header keywords are followed by a single value\r\n");
+				sw.Write("# Keyword Value\r\n");
+				sw.Write("FileType htr\r\nDataType HTRS\r\nFileVersion 1\r\n");
+				sw.Write($"NumSegments {posDat.Count}\r\n");
+				sw.Write($"EulerRotationOrder XYZ\r\nCalibrationUnits mm\r\n");
+				sw.Write($"GlobalAxisOfGravity Y\r\nRotationUnits Degrees\r\nBoneLengthAxis Y\r\n");
+				sw.Write($"ScaleFactor 1.0\r\n");
+
+				// Write base position
+				sw.Write("[BasePosition]\r\n# SegmentName\t Tx, Ty, Tz, Rx, Ry, Rz, BoneLength\r\n");
+				sw.Write($"LeftHand {posDat[0].handLeft.x}, {posDat[0].handLeft.y}, {posDat[0].handLeft.z}, {rotDat[0].handLeft.x}, {rotDat[0].handLeft.y}, {rotDat[0].handLeft.z}, 1.0\r\n");
+				sw.Write($"RightHand {posDat[0].handRight.x}, {posDat[0].handRight.y}, {posDat[0].handRight.z}, {rotDat[0].handRight.x}, {rotDat[0].handRight.y}, {rotDat[0].handRight.z}, 1.0\r\n");
+				sw.Write($"Head {posDat[0].head.x}, {posDat[0].head.y}, {posDat[0].head.z}, {rotDat[0].head.x}, {rotDat[0].head.y}, {rotDat[0].head.z}, 1.0\r\n");
+
+                // Write per-node info per-keyframe
+                sw.Write("#Beginning of Data. Separated by tabs.\r\n");
+                // NOTE: This is more manual than I'd like, but I'd have to change a lot of packing and formatting
+               
+                // Write out left hand
+                sw.Write("[LeftHand]\r\n");
+                for(int i = 1; i < posDat.Count - 1; ++ i)
+				{
+                    sw.Write($"{i}\t{posDat[i].handLeft.x}\t{posDat[i].handLeft.y}\t{posDat[i].handLeft.y}\t{rotDat[i].handLeft.x}\t{rotDat[i].handLeft.y}\t{rotDat[i].handLeft.z}\t1.00\r\n");
+                }
+
+                // Write out right hand
+                sw.Write("[RightHand]\r\n");
+                for(int i = 1; i < posDat.Count - 1; ++ i)
+				{
+                    sw.Write($"{i}\t{posDat[i].handRight.x}\t{posDat[i].handRight.y}\t{posDat[i].handRight.y}\t{rotDat[i].handRight.x}\t{rotDat[i].handRight.y}\t{rotDat[i].handRight.z}\t1.00\r\n");
+                }
+
+                // Write out head
+                sw.Write("[Head]\r\n");
+                for(int i = 1; i < posDat.Count - 1; ++ i)
+				{
+                    sw.Write($"{i}\t{posDat[i].head.x}\t{posDat[i].head.y}\t{posDat[i].head.y}\t{rotDat[i].head.x}\t{rotDat[i].head.y}\t{rotDat[i].head.z}\t1.00\r\n");
+                }
+
+                // Write end of file
+                sw.Write("[EndOfFile]\r\n");
+			}
+
+			return true;
+		}
+
+		return false;
+	}
 }
