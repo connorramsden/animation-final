@@ -12,7 +12,7 @@ public class SkeletalHandler : MonoBehaviour
 	public float effectorTolerance = 0.2f;
 	public float legHeightModifier = 1.0f;
 	public float chainLengthModifier = 1.2f;//this is for when you are a bit bigger than the character and dont wanna deal with ik solving to stop
-	public float personHeight = 20.0f;	//this is stock skeleton height
+	public float personHeight = 20.0f;  //this is stock skeleton height
 
 
 	private List<int> LeftArm;
@@ -42,14 +42,14 @@ public class SkeletalHandler : MonoBehaviour
 	float RightLegEffectorDistance = 0;    //distance from root to effector
 	float SpineEffectorDistance = 0;    //distance from root to effector
 	float LookEffectorDistance = 0;    //distance from root to effector
-	
+
 	//ref GameObject mpBaseEffector;
 	//ref GameObject mpEndEffector;
 	//HierarchicalPosePool* mpSkeleton;
 
 
 	void Start()
-    {
+	{
 		LeftArm = new List<int>();
 		RightArm = new List<int>();
 		LeftLeg = new List<int>();
@@ -68,11 +68,11 @@ public class SkeletalHandler : MonoBehaviour
 		{
 			fillJointLists();
 		}
-    }
+	}
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
+	// Update is called once per frame
+	void FixedUpdate()
+	{
 		solveHipToGround();
 		updateEffectorDistances();
 
@@ -80,14 +80,14 @@ public class SkeletalHandler : MonoBehaviour
 		SolveInverseKinematicsIter(RightArm, RightArmBoneLengths, RightOculus.position, RightArmEffectorDistance, RightArmChainLength, iterations);
 		SolveInverseKinematicsIter(LeftLeg, LeftLegBoneLengths, LeftLegTarget(), LeftLegEffectorDistance, LeftLegChainLength, iterations);
 		SolveInverseKinematicsIter(RightLeg, RightLegBoneLengths, RightLegTarget(), RightLegEffectorDistance, RightLegChainLength, iterations);
-		SolveInverseKinematicsIter(Look, LookBoneLengths, HeadsetOculus.position, LookEffectorDistance, LookChainLength, iterations);			
+		SolveInverseKinematicsIter(Look, LookBoneLengths, HeadsetOculus.position, LookEffectorDistance, LookChainLength, iterations);
 		//SolveInverseKinematicsIter(Spine, SpineBoneLengths, (HeadsetOculus.position), SpineEffectorDistance, SpineChainLength, iterations);	//find new target for this
-		
+
 		//updateFullSkeletonPostion();
 	}
 
 	void solveHipToGround()
-    {
+	{
 
 		//HipToGroundHeight = 5f;
 		//HipToGroundHeight = (OVRSkeletonNodes[Look[Look.Count - 1]].transform.position - OVRSkeletonNodes[RightLeg[RightLeg.Count - 1]].transform.position).magnitude - 
@@ -118,7 +118,7 @@ public class SkeletalHandler : MonoBehaviour
 		RightArm.Add(findInSkeleton("RightShoulder"));
 		RightArm.Add(findInSkeleton("RightElbow"));
 		RightArm.Add(findInSkeleton("RightHand"));
-		
+
 
 		//left leg
 		LeftLeg.Add(findInSkeleton("LeftHip"));
@@ -162,28 +162,28 @@ public class SkeletalHandler : MonoBehaviour
 
 		//calculate effector distance
 		//updateEffectorDistances();
-		
+
 	}
 
 	int findInSkeleton(string jointName)
-    {
+	{
 		int result = 0;
 
-		for(int i = 0; i < OVRSkeletonNodes.Count; ++i)
-        {
-			if(OVRSkeletonNodes[i].gameObject.name == jointName)
-            {
+		for (int i = 0; i < OVRSkeletonNodes.Count; ++i)
+		{
+			if (OVRSkeletonNodes[i].gameObject.name == jointName)
+			{
 				result = i;
 				//Debug.Log("[OUR CODE] findInSkeleton: " + OVRSkeletonNodes[i].gameObject.name + " at Position #" + i);
 				return result;
-            }
-        }
+			}
+		}
 
 		return result;
-    }
+	}
 
 	void fillJointListBoneAndChainLengths(List<int> targetNodes, ref List<float> boneLengths, ref float chainLength)
-    {
+	{
 		if (targetNodes.Count != 0)
 		{
 			for (int i = 0; i < targetNodes.Count - 1; i++)
@@ -207,8 +207,8 @@ public class SkeletalHandler : MonoBehaviour
 	}
 
 	void updateFullSkeletonPostion()
-    {
-		if (LookEffectorDistance >= LookChainLength)	//if we moved the headset far enough from the base move the whole body
+	{
+		if (LookEffectorDistance >= LookChainLength)    //if we moved the headset far enough from the base move the whole body
 		{
 			Vector3 headsetXZPos = new Vector3(HeadsetOculus.position.x, 0.0f, HeadsetOculus.position.z);
 			//based on the x-z position of the headset, move the full skeleton
@@ -217,10 +217,10 @@ public class SkeletalHandler : MonoBehaviour
 				OVRSkeletonNodes[i].transform.position = (headsetXZPos - OVRSkeletonNodes[i].transform.position);
 			}
 		}
-    }
+	}
 
 	Vector3 LeftLegTarget()
-    {
+	{
 		return (OVRSkeletonNodes[LeftLeg[0]].transform.position - new Vector3(0.0f, Mathf.Abs(HipToGroundHeight), 0.0f));
 	}
 
@@ -230,7 +230,7 @@ public class SkeletalHandler : MonoBehaviour
 	}
 
 	void updateEffectorDistances()
-    {
+	{
 		LeftArmEffectorDistance = (OVRSkeletonNodes[LeftArm[0]].transform.position - LeftOculus.position).magnitude;
 		RightArmEffectorDistance = (OVRSkeletonNodes[RightArm[0]].transform.position - RightOculus.position).magnitude;
 		LeftLegEffectorDistance = (OVRSkeletonNodes[LeftLeg[0]].transform.position - LeftLegTarget()).magnitude;
@@ -266,7 +266,6 @@ public class SkeletalHandler : MonoBehaviour
 
 				OVRSkeletonNodes[jointList[(jointList.Count - 1)]].transform.position = targetPos;    //move the endEffector to the target
 
-				
 
 				//go through the chain from end to beginning
 				for (int j = (jointList.Count - 1); j > 0; --j)     //has to be this weird way for parents
@@ -274,12 +273,12 @@ public class SkeletalHandler : MonoBehaviour
 					//GameObject currJoint = jointList[j];
 					//GameObject parentJoint = jointList[j - 1];
 					//Debug.Log("[OUR CODE] Current Joint: " + OVRSkeletonNodes[jointList[j]].name + "    Parent Joint: " + OVRSkeletonNodes[jointList[j - 1]].name);
-					
+
 
 					Vector3 dir = (OVRSkeletonNodes[jointList[j - 1]].transform.position - OVRSkeletonNodes[jointList[j]].transform.position).normalized;    //set the direction vector to place the parent joint inline
 					float dist = 1;
-					if(j != 0)
-                    {
+					if (j != 0)
+					{
 						dist = distances[j - 1];
 						//Debug.Log("[OUR CODE] Iterations on distance: " + (j - 1));
 					}
@@ -295,12 +294,12 @@ public class SkeletalHandler : MonoBehaviour
 					//GameObject currJoint = jointList[j];
 					//GameObject childJoint = jointList[j + 1];
 					//Debug.Log("[OUR CODE] Current Joint: " + OVRSkeletonNodes[jointList[j]].name + "    Child Joint: " + OVRSkeletonNodes[jointList[j + 1]].name);
-					
-					
+
+
 					Vector3 dir = (OVRSkeletonNodes[jointList[j + 1]].transform.position - OVRSkeletonNodes[jointList[j]].transform.position).normalized;
 					float dist = 1;
-					if(j + 1 != jointList.Count)
-                    {
+					if (j + 1 != jointList.Count)
+					{
 						dist = distances[j];
 						//Debug.Log("[OUR CODE] Iterations on distance: " + j);
 					}
@@ -313,13 +312,10 @@ public class SkeletalHandler : MonoBehaviour
 				//Vector3 offset = OVRSkeletonNodes[jointList[(jointList.Count - 1)]].transform.position - OVRSkeletonNodes[jointList[(jointList.Count - 2)]].transform.position;
 				//Vector3 offset = OVRSkeletonNodes[jointList[(jointList.Count - 1)]].transform.position - targetPos;
 				//if(offset.magnitude < effectorTolerance)
-    //            {
+				//            {
 				//	break;
-    //            }
-				
-				
+				//            }
 			}
 		}
 	}
-
 }

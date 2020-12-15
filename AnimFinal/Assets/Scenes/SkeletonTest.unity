@@ -233,7 +233,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &258380085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,7 +282,7 @@ Canvas:
   m_GameObject: {fileID: 258380084}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -615,7 +615,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1230667865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -664,6 +664,58 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1243992192
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1243992193}
+  - component: {fileID: 1243992194}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1243992193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243992192}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1243992194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243992192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e143e7c35834c60aca9fab9f52a6063, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftController: {fileID: 1434178526}
+  leftControllerPosition: {x: 0, y: 0, z: 0}
+  leftControllerRotation: {x: 0, y: 0, z: 0}
+  rightController: {fileID: 1563651222}
+  rightControllerPosition: {x: 0, y: 0, z: 0}
+  rightControllerRotation: {x: 0, y: 0, z: 0}
+  headset: {fileID: 1632467687}
+  headsetPosition: {x: 0, y: 0, z: 0}
+  headsetRotation: {x: 0, y: 0, z: 0}
 --- !u!4 &1434178526 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 508746250055311608, guid: 5e6a3b6c954651240abdae424f995478, type: 3}
@@ -1059,6 +1111,10 @@ PrefabInstance:
     - target: {fileID: 2242422772111120869, guid: 5e6a3b6c954651240abdae424f995478, type: 3}
       propertyPath: _monoscopic
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242422772111120869, guid: 5e6a3b6c954651240abdae424f995478, type: 3}
+      propertyPath: usePositionTracking
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3746196862056428424, guid: 5e6a3b6c954651240abdae424f995478, type: 3}
       propertyPath: m_Constraints
