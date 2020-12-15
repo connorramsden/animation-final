@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SkeletalHandler : MonoBehaviour
 {
+	public GameObject OVRSkeleton;
 	public List<GameObject> OVRSkeletonNodes;     //mJointList
 	public Transform LeftOculus;
 	public Transform RightOculus;
@@ -13,6 +14,8 @@ public class SkeletalHandler : MonoBehaviour
 	public float legHeightModifier = 1.0f;
 	public float chainLengthModifier = 1.2f;//this is for when you are a bit bigger than the character and dont wanna deal with ik solving to stop
 	public float personHeight = 20.0f;  //this is stock skeleton height
+	public float walkSpeed = 1.0f;
+	public float hieghtOfStep = 0.3f;	//0 to 1 range
 
 
 	private List<int> LeftArm;
@@ -73,17 +76,18 @@ public class SkeletalHandler : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate()
 	{
-		solveHipToGround();
+		//updateFullSkeletonPostion();
 		updateEffectorDistances();
 
+		solveHipToGround();
+		
 		SolveInverseKinematicsIter(LeftArm, LeftArmBoneLengths, LeftOculus.position, LeftArmEffectorDistance, LeftArmChainLength, iterations);
 		SolveInverseKinematicsIter(RightArm, RightArmBoneLengths, RightOculus.position, RightArmEffectorDistance, RightArmChainLength, iterations);
-		SolveInverseKinematicsIter(LeftLeg, LeftLegBoneLengths, LeftLegTarget(), LeftLegEffectorDistance, LeftLegChainLength, iterations);
-		SolveInverseKinematicsIter(RightLeg, RightLegBoneLengths, RightLegTarget(), RightLegEffectorDistance, RightLegChainLength, iterations);
-		SolveInverseKinematicsIter(Look, LookBoneLengths, HeadsetOculus.position, LookEffectorDistance, LookChainLength, iterations);
-		//SolveInverseKinematicsIter(Spine, SpineBoneLengths, (HeadsetOculus.position), SpineEffectorDistance, SpineChainLength, iterations);	//find new target for this
+		//SolveInverseKinematicsIter(LeftLeg, LeftLegBoneLengths, LeftLegTarget(), LeftLegEffectorDistance, LeftLegChainLength, iterations);
+		//SolveInverseKinematicsIter(RightLeg, RightLegBoneLengths, RightLegTarget(), RightLegEffectorDistance, RightLegChainLength, iterations);
+		//SolveInverseKinematicsIter(Look, LookBoneLengths, HeadsetOculus.position, LookEffectorDistance, LookChainLength, iterations);
+		SolveInverseKinematicsIter(Spine, SpineBoneLengths, (HeadsetOculus.position), SpineEffectorDistance, SpineChainLength, iterations);	//find new target for this
 
-		//updateFullSkeletonPostion();
 	}
 
 	void solveHipToGround()
@@ -99,6 +103,7 @@ public class SkeletalHandler : MonoBehaviour
 		HipToGroundHeight = ((personHeight * 0.5f) - (Mathf.Abs(HeadsetOculus.position.y - OVRSkeletonNodes[Spine[0]].transform.position.y) * personHeight)) / (personHeight * 0.5f);
 		Debug.Log("[OUR CODE] Hips To Ground: " + HipToGroundHeight.ToString());
 	}
+
 
 	void fillJointLists()
 	{
@@ -136,6 +141,8 @@ public class SkeletalHandler : MonoBehaviour
 		Spine.Add(findInSkeleton("Hip"));
 		Spine.Add(findInSkeleton("TorsoLower"));
 		Spine.Add(findInSkeleton("TorsoUpper"));
+		Spine.Add(findInSkeleton("Neck"));
+		Spine.Add(findInSkeleton("Head"));
 
 		//look neck
 		Look.Add(findInSkeleton("TorsoUpper"));
@@ -212,21 +219,30 @@ public class SkeletalHandler : MonoBehaviour
 		{
 			Vector3 headsetXZPos = new Vector3(HeadsetOculus.position.x, 0.0f, HeadsetOculus.position.z);
 			//based on the x-z position of the headset, move the full skeleton
-			for (int i = 0; i < OVRSkeletonNodes.Count - 1; ++i)
-			{
-				OVRSkeletonNodes[i].transform.position = (headsetXZPos - OVRSkeletonNodes[i].transform.position);
-			}
+			//for (int i = 0; i < OVRSkeletonNodes.Count - 1; ++i)
+			//{
+			//	OVRSkeletonNodes[i].transform.position = (headsetXZPos - OVRSkeletonNodes[i].transform.position);
+			//}
+			OVRSkeleton.transform.position = headsetXZPos - OVRSkeleton.transform.position;
 		}
 	}
 
 	Vector3 LeftLegTarget()
 	{
-		return (OVRSkeletonNodes[LeftLeg[0]].transform.position - new Vector3(0.0f, Mathf.Abs(HipToGroundHeight), 0.0f));
+		float bottomFlatline = 0.2f;
+		float topFlatline = 0.8f;
+		float stepVal = Mathf.Clamp(Mathf.Sin(Time.deltaTime * walkSpeed), bottomFlatline, topFlatline) * (HipToGroundHeight * hieghtOfStep);
+		return (OVRSkeletonNodes[LeftLeg[0]].transform.position - 
+					(new Vector3(0.0f, Mathf.Abs(HipToGroundHeight - stepVal), 0.0f)));
 	}
 
 	Vector3 RightLegTarget()
 	{
-		return (OVRSkeletonNodes[RightLeg[0]].transform.position - new Vector3(0.0f, Mathf.Abs(HipToGroundHeight), 0.0f));
+		float bottomFlatline = 0.2f;
+		float topFlatline = 0.8f;
+		float stepVal = Mathf.Clamp(Mathf.Cos(Time.deltaTime * walkSpeed), bottomFlatline, topFlatline) * (HipToGroundHeight * hieghtOfStep);
+		return (OVRSkeletonNodes[RightLeg[0]].transform.position - 
+					(new Vector3(0.0f, Mathf.Abs(HipToGroundHeight - stepVal), 0.0f)));
 	}
 
 	void updateEffectorDistances()
