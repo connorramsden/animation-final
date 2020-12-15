@@ -12,6 +12,13 @@ namespace DefaultNamespace
 		public Vector3 head;
 		public Vector3 handLeft;
 		public Vector3 handRight;
+
+		public void Init(Vector3 left, Vector3 right, Vector3 _head)
+		{
+			handLeft = left;
+			handRight = right;
+			head = _head;
+		}
 	}
 
 	public class LiveDataCaptureInterface : MonoBehaviour
@@ -27,7 +34,15 @@ namespace DefaultNamespace
 
 		public void captureData()
 		{
-			// Acquire positions from the Input Handler	
+			// Acquire positions from the Input Handler
+
+			FrameData position = new FrameData();
+			position.Init(inputHandler.leftControllerPosition, inputHandler.rightControllerPosition, inputHandler.headsetPosition);
+			FrameData rotation = new FrameData();
+			rotation.Init(inputHandler.leftControllerRotation, inputHandler.rightControllerRotation, inputHandler.headsetRotation);
+
+			positionalData.Add(position);
+			rotationalData.Add(rotation);
 		}
 
 		private void Awake()
