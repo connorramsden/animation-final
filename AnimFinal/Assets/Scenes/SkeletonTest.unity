@@ -624,9 +624,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1943636747579266923, guid: bf3426ee3f3e82a4b928d7c87bb14a4e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4644548895843452453, guid: bf3426ee3f3e82a4b928d7c87bb14a4e, type: 3}
       propertyPath: m_Name
       value: Neck
+      objectReference: {fileID: 0}
+    - target: {fileID: 5008059149759317536, guid: bf3426ee3f3e82a4b928d7c87bb14a4e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6481682530258809746, guid: bf3426ee3f3e82a4b928d7c87bb14a4e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8721778803749536664, guid: bf3426ee3f3e82a4b928d7c87bb14a4e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763311573957023597, guid: bf3426ee3f3e82a4b928d7c87bb14a4e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf3426ee3f3e82a4b928d7c87bb14a4e, type: 3}
