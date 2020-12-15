@@ -14,9 +14,9 @@ public class SkeletalHandler : MonoBehaviour
 	public float legHeightModifier = 1.0f;
 	public float chainLengthModifier = 1.2f;//this is for when you are a bit bigger than the character and dont wanna deal with ik solving to stop
 	public float personHeight = 20.0f;  //this is stock skeleton height
-	public float walkSpeed = 1.0f;
-	public float hieghtOfStep = 0.3f;	//0 to 1 range
-
+	public float walkSpeed = 2.0f;
+	public float hieghtOfStep = 0.3f;   //0 to 1 range
+	public float strideDistance = 0.2f;	//how far the steps are, not 0 to 1
 
 	private List<int> LeftArm;
 	private List<int> RightArm;
@@ -83,10 +83,10 @@ public class SkeletalHandler : MonoBehaviour
 		
 		SolveInverseKinematicsIter(LeftArm, LeftArmBoneLengths, LeftOculus.position, LeftArmEffectorDistance, LeftArmChainLength, iterations);
 		SolveInverseKinematicsIter(RightArm, RightArmBoneLengths, RightOculus.position, RightArmEffectorDistance, RightArmChainLength, iterations);
-		//SolveInverseKinematicsIter(LeftLeg, LeftLegBoneLengths, LeftLegTarget(), LeftLegEffectorDistance, LeftLegChainLength, iterations);
-		//SolveInverseKinematicsIter(RightLeg, RightLegBoneLengths, RightLegTarget(), RightLegEffectorDistance, RightLegChainLength, iterations);
-		//SolveInverseKinematicsIter(Look, LookBoneLengths, HeadsetOculus.position, LookEffectorDistance, LookChainLength, iterations);
+		SolveInverseKinematicsIter(LeftLeg, LeftLegBoneLengths, LeftLegTarget(), LeftLegEffectorDistance, LeftLegChainLength, iterations);
+		SolveInverseKinematicsIter(RightLeg, RightLegBoneLengths, RightLegTarget(), RightLegEffectorDistance, RightLegChainLength, iterations);
 		SolveInverseKinematicsIter(Spine, SpineBoneLengths, (HeadsetOculus.position), SpineEffectorDistance, SpineChainLength, iterations);	//find new target for this
+		//SolveInverseKinematicsIter(Look, LookBoneLengths, HeadsetOculus.position, LookEffectorDistance, LookChainLength, iterations);
 
 	}
 
@@ -100,7 +100,7 @@ public class SkeletalHandler : MonoBehaviour
 		//HipToGroundHeight = RightLegChainLength - (startHeight + HeadsetOculus.position.y);
 
 
-		HipToGroundHeight = ((personHeight * 0.5f) - (Mathf.Abs(HeadsetOculus.position.y - OVRSkeletonNodes[Spine[0]].transform.position.y) * personHeight)) / (personHeight * 0.5f);
+		HipToGroundHeight = ((personHeight * 0.5f) - (Mathf.Abs(HeadsetOculus.position.y + 0.2f - OVRSkeletonNodes[Spine[0]].transform.position.y) * personHeight)) / (personHeight * 0.5f);
 		Debug.Log("[OUR CODE] Hips To Ground: " + HipToGroundHeight.ToString());
 	}
 
@@ -231,18 +231,31 @@ public class SkeletalHandler : MonoBehaviour
 	{
 		float bottomFlatline = 0.2f;
 		float topFlatline = 0.8f;
-		float stepVal = Mathf.Clamp(Mathf.Sin(Time.deltaTime * walkSpeed), bottomFlatline, topFlatline) * (HipToGroundHeight * hieghtOfStep);
-		return (OVRSkeletonNodes[LeftLeg[0]].transform.position - 
-					(new Vector3(0.0f, Mathf.Abs(HipToGroundHeight - stepVal), 0.0f)));
+		float xPos = (OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick).x * strideDistance);
+		float zPos = (OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick).y * strideDistance);	//has to be y because two axis stick
+		float analogInputMagnitude = (OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick)).magnitude;
+
+		//how high the leg will be in its arc
+		float stepVal = Mathf.Clamp(Mathf.Sin(Time.time * (walkSpeed * analogInputMagnitude)), bottomFlatline, topFlatline) * (HipToGroundHeight * hieghtOfStep);
+		
+
+		return (OVRSkeletonNodes[LeftLeg[0]].transform.position - (new Vector3(xPos, Mathf.Abs(HipToGroundHeight - stepVal), zPos)));
+		//return (OVRSkeletonNodes[LeftLeg[0]].transform.position - (new Vector3(0.0f, Mathf.Abs(HipToGroundHeight), 0.0f)));
 	}
 
 	Vector3 RightLegTarget()
 	{
 		float bottomFlatline = 0.2f;
 		float topFlatline = 0.8f;
-		float stepVal = Mathf.Clamp(Mathf.Cos(Time.deltaTime * walkSpeed), bottomFlatline, topFlatline) * (HipToGroundHeight * hieghtOfStep);
-		return (OVRSkeletonNodes[RightLeg[0]].transform.position - 
-					(new Vector3(0.0f, Mathf.Abs(HipToGroundHeight - stepVal), 0.0f)));
+		float xPos = (OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick).x * strideDistance);
+		float zPos = (OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick).y * strideDistance); //has to be y because two axis stick
+		float analogInputMagnitude = (OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick)).magnitude;
+		
+		//how high leg will be in its arc
+		float stepVal = Mathf.Clamp(Mathf.Cos(Time.time * (walkSpeed * analogInputMagnitude)), bottomFlatline, topFlatline) * (HipToGroundHeight * hieghtOfStep);
+		
+		return (OVRSkeletonNodes[RightLeg[0]].transform.position - (new Vector3(xPos, Mathf.Abs(HipToGroundHeight - stepVal), zPos)));
+		//return (OVRSkeletonNodes[RightLeg[0]].transform.position - (new Vector3(0.0f, Mathf.Abs(HipToGroundHeight), 0.0f)));
 	}
 
 	void updateEffectorDistances()
