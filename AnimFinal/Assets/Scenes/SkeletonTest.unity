@@ -579,6 +579,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1243992193}
   - component: {fileID: 1243992194}
+  - component: {fileID: 1243992195}
+  - component: {fileID: 1243992196}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -621,8 +623,37 @@ MonoBehaviour:
   headset: {fileID: 1632467687}
   headsetPosition: {x: 0, y: 0, z: 0}
   headsetRotation: {x: 0, y: 0, z: 0}
-  skeletalHandler: {fileID: 0}
-  captureInterface: {fileID: 0}
+  skeletalHandler: {fileID: 2242422770863820719}
+  captureInterface: {fileID: 1243992195}
+  exporter: {fileID: 1243992196}
+--- !u!114 &1243992195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243992192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b5ff16beac94d929783dcd8cdcd4f3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionalData: []
+  rotationalData: []
+  inputHandler: {fileID: 1243992194}
+  shouldCapture: 0
+--- !u!114 &1243992196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243992192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3554bbf60e8b3d4e8d15bb347ef41ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1434178526 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 508746250055311608, guid: 5e6a3b6c954651240abdae424f995478, type: 3}
@@ -948,6 +979,10 @@ PrefabInstance:
       propertyPath: legHeightModifier
       value: 1.4
       objectReference: {fileID: 0}
+    - target: {fileID: 6780290450794078720, guid: 5e6a3b6c954651240abdae424f995478, type: 3}
+      propertyPath: pencilNeck
+      value: 0.325
+      objectReference: {fileID: 0}
     - target: {fileID: 8712382529130221608, guid: 5e6a3b6c954651240abdae424f995478, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
@@ -958,3 +993,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e6a3b6c954651240abdae424f995478, type: 3}
+--- !u!114 &2242422770863820719 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6780290450794078720, guid: 5e6a3b6c954651240abdae424f995478, type: 3}
+  m_PrefabInstance: {fileID: 2242422770863820718}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0987dab2f8d61b4ba476f3aee32fff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

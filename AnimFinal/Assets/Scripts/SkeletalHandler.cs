@@ -105,7 +105,7 @@ public class SkeletalHandler : MonoBehaviour
 
 
 		HipToGroundHeight = ((personHeight * 0.5f) - (Mathf.Abs(HeadsetOculus.position.y + pencilNeck - OVRSkeletonNodes[Spine[0]].transform.position.y) * personHeight)) / (personHeight * 0.5f);
-		Debug.Log("[OUR CODE] Hips To Ground: " + HipToGroundHeight.ToString());
+		// Debug.Log("[OUR CODE] Hips To Ground: " + HipToGroundHeight.ToString());
 	}
 
 	void drawBones()
