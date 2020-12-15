@@ -23,6 +23,9 @@ namespace DefaultNamespace.VR
 		[Header("Sub-Managers")]
 		public SkeletalHandler skeletalHandler;
 		public LiveDataCaptureInterface captureInterface;
+		public ExportHTR exporter;
+
+		private bool shouldQuit;
 
 		// Assign controller prefabs to left and right respectively
 		// Set rotations to be Euler
@@ -38,6 +41,8 @@ namespace DefaultNamespace.VR
 
 			// Set position and rotation for controllers and headset variables
 			CheckInput();
+
+			shouldQuit = false;
 		}
 
 		// Acquire Pos & Rot data for both controllers & headset
@@ -67,11 +72,31 @@ namespace DefaultNamespace.VR
 
 		public void Update()
 		{
+			// Update tracking positions from controllres and headset
 			CheckInput();
-		}
 
-		public void FixedUpdate()
-		{
+			if (OVRInput.GetDown(OVRInput.RawButton.X))
+			{
+				captureInterface.shouldCapture = true;
+			}
+			if (OVRInput.GetUp(OVRInput.RawButton.X))
+			{
+				captureInterface.shouldCapture = false;
+			}
+			if (Input.GetKeyDown(KeyCode.F))
+			{
+				exporter.ExportInfo(captureInterface.positionalData, captureInterface.rotationalData);
+			}
+			if (Input.GetKeyDown(KeyCode.Escape))
+				shouldQuit = true;
+
+			if (shouldQuit)
+			{
+
+#if UNITY_EDITOR
+				UnityEditor.EditorApplication.isPlaying = false;
+#endif
+			}
 		}
 	}
 }
