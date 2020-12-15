@@ -16,7 +16,8 @@ public class SkeletalHandler : MonoBehaviour
 	public float personHeight = 20.0f;  //this is stock skeleton height
 	public float walkSpeed = 2.0f;
 	public float hieghtOfStep = 0.3f;   //0 to 1 range
-	public float strideDistance = 0.2f;	//how far the steps are, not 0 to 1
+	public float strideDistance = 0.2f; //how far the steps are, not 0 to 1
+	public float pencilNeck = 0.2f;
 
 	private List<int> LeftArm;
 	private List<int> RightArm;
@@ -76,6 +77,9 @@ public class SkeletalHandler : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate()
 	{
+		drawBones();
+		drawTargetToEffectors();
+
 		//updateFullSkeletonPostion();
 		updateEffectorDistances();
 
@@ -100,10 +104,36 @@ public class SkeletalHandler : MonoBehaviour
 		//HipToGroundHeight = RightLegChainLength - (startHeight + HeadsetOculus.position.y);
 
 
-		HipToGroundHeight = ((personHeight * 0.5f) - (Mathf.Abs(HeadsetOculus.position.y + 0.2f - OVRSkeletonNodes[Spine[0]].transform.position.y) * personHeight)) / (personHeight * 0.5f);
+		HipToGroundHeight = ((personHeight * 0.5f) - (Mathf.Abs(HeadsetOculus.position.y + pencilNeck - OVRSkeletonNodes[Spine[0]].transform.position.y) * personHeight)) / (personHeight * 0.5f);
 		Debug.Log("[OUR CODE] Hips To Ground: " + HipToGroundHeight.ToString());
 	}
 
+	void drawBones()
+    {
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("LeftHand")].transform.position, OVRSkeletonNodes[findInSkeleton("LeftElbow")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("LeftElbow")].transform.position, OVRSkeletonNodes[findInSkeleton("LeftShoulder")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("LeftShoulder")].transform.position, OVRSkeletonNodes[findInSkeleton("TorsoUpper")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("RightHand")].transform.position, OVRSkeletonNodes[findInSkeleton("RightElbow")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("RightElbow")].transform.position, OVRSkeletonNodes[findInSkeleton("RightShoulder")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("RightShoulder")].transform.position, OVRSkeletonNodes[findInSkeleton("TorsoUpper")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("TorsoUpper")].transform.position, OVRSkeletonNodes[findInSkeleton("Neck")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("Neck")].transform.position, OVRSkeletonNodes[findInSkeleton("Head")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("TorsoUpper")].transform.position, OVRSkeletonNodes[findInSkeleton("TorsoLower")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("TorsoLower")].transform.position, OVRSkeletonNodes[findInSkeleton("Hip")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("Hip")].transform.position, OVRSkeletonNodes[findInSkeleton("LeftHip")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("Hip")].transform.position, OVRSkeletonNodes[findInSkeleton("RightHip")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("RightHip")].transform.position, OVRSkeletonNodes[findInSkeleton("RightKnee")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("LeftHip")].transform.position, OVRSkeletonNodes[findInSkeleton("LeftKnee")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("RightKnee")].transform.position, OVRSkeletonNodes[findInSkeleton("RightFoot")].transform.position, Color.red);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("LeftKnee")].transform.position, OVRSkeletonNodes[findInSkeleton("LeftFoot")].transform.position, Color.red);
+	}
+
+	void drawTargetToEffectors()
+    {
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("LeftHand")].transform.position, LeftOculus.position, Color.green);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("RightHand")].transform.position, RightOculus.position, Color.green);
+		Debug.DrawLine(OVRSkeletonNodes[findInSkeleton("Head")].transform.position, HeadsetOculus.position, Color.green);
+	}
 
 	void fillJointLists()
 	{
